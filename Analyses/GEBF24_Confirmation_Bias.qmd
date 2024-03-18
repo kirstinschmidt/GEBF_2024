@@ -1,0 +1,683 @@
+---
+title: "ConfBias as Barrier for EIP"
+format: 
+  html:
+    self-contained: true
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+## Download data
+
+```{r}
+#| message: false
+library(tidyverse)
+library(skimr)
+
+ds <- read_delim("./Analyses/data/data.csv")
+
+# source("https://soscisurvey.ph-karlsruhe.de/forschungsergebnisse/?act=q2BP61GjDxXUMAqLlSN1H0Sy&rScript")  
+
+ds <- ds |> 
+  filter(lubridate::ymd_hms(STARTED) > 
+        lubridate::ymd_hms("2023-07-12 16:00:00"),
+        !AB03 == 2,
+        !AB03 == -9) #|> 
+ # as_tibble()
+
+```
+
+## Design
+
+| Gruppe 1                                                                  | Gruppe 2                                                                  |
+|------------------------------------|------------------------------------|
+| Abfrage von zukünftigem Handeln, Überzeugung & Sicherheit der Überzeugung | Abfrage von zukünftigem Handeln, Überzeugung & Sicherheit der Überzeugung |
+| Überzeugungs**konformes** Studienergebnis                                 | Überzeungs**widriges** Studienergebnis                                    |
+| Abfrage von zukünftigem Handeln, Überzeugung & Sicherheit der Überzeugung | Abfrage von zukünftigem Handeln, Überzeugung & Sicherheit der Überzeugung |
+| Soziodemographie                                                          | Soziodemographie                                                          |
+
+### Result A
+
+> Schweitzer & May (2019) sind in einem bildungswissenschaftlichen Experiment mit Lehrkräften der Frage nachgegangen, ob das generische Maskulinum, also die Verwendung der männlichen Form eines Begriffs (z. B. Schüler), eher zu einer Nennung von männlichen Vornamen führt als die Verwendung der weiblichen und männlichen Form eines Begriffs (z. B. Schülerinnen und Schüler). Um diese Frage zu beantworten, wurden zufällig zwei Gruppen mit jeweils 179 Lehrkräften gebildet. Die eine Gruppe wurde gebeten, „die Vornamen ihrer vier leistungsstärksten Schüler im Mathematikunterricht" und die andere Gruppe „die Vornamen ihrer vier leistungsstärksten Schülerinnen und Schüler im Mathematikunterricht" zu benennen.
+
+**Das Ergebnis:** **Diejenigen Lehrkräfte, die nach den Vornamen ihrer leistungsstärksten ‚Schüler' im Mathematikunterricht gefragt wurden, [nannten im Durchschnitt mehr männliche als weibliche Vornamen]{style="color:#8cd000"} als diejenigen, die nach ihren leistungsstärksten ‚Schülerinnen und Schülern' gefragt wurden.**
+
+### Result B
+
+> Schweitzer & May (2019) sind in einem bildungswissenschaftlichen Experiment mit Lehrkräften der Frage nachgegangen, ob das generische Maskulinum, also die Verwendung der männlichen Form eines Begriffs (z. B. Schüler), eher zu einer Nennung von männlichen Vornamen führt als die Verwendung der weiblichen und männlichen Form eines Begriffs (z. B. Schülerinnen und Schüler). Um diese Frage zu beantworten, wurden zufällig zwei Gruppen mit jeweils 179 Lehrkräften gebildet. Die eine Gruppe wurde gebeten, „die Vornamen ihrer vier leistungsstärksten Schüler im Mathematikunterricht" und die andere Gruppe „die Vornamen ihrer vier leistungsstärksten Schülerinnen und Schüler im Mathematikunterricht" zu benennen.
+
+**Das Ergebnis:** **Diejenigen Lehrkräfte, die nach den Vornamen ihrer leistungsstärksten ‚Schüler' im Mathematikunterricht gefragt wurden, [nannten im Durchschnitt gleich viele männliche und weibliche Vornamen]{style="color:#8cd000"} wie diejenigen, die nach ihren leistungsstärksten ‚Schülerinnen und Schülern' gefragt wurden.**
+
+## Forschungsfragen:
+
+-   Zeigen Pbdn Belief-Updating (in Richtung und Stärke)
+
+-   Zeigen Pbdn Handlungstendenz-Updating (in Richtung und Stärke)
+
+-   Wirkt sich die Belief-Evidenz-Kongruenz auf die Bewertung der Studienqualität aus
+
+-   Interagiert das Beliefupdating mit der Kongruenz der Beliefs
+
+-   Interagiert das Handlungstendenz-Updating mit der Kongruenz der Beliefs
+
+## Variablen
+
+```{r}
+ data <- 
+   ds |> 
+  mutate(Gruppe = ifelse(DU06 == 1, "Ü_konsistent", "Ü_widrig"),
+         Group = ifelse(DU06 == 1, "Ü_konsistent", "Ü_widrig"),
+         
+         Belief_pre = DU03,
+         Belief_pre_short = substr(DU03, 1, 15),
+         Belief_pre_n = as.numeric(DU03) - 1,
+         
+         Belief_strength_pre = ifelse(is.na(DU08), as.numeric(DU10), as.numeric(DU08)),
+         Decision_pre = as.numeric(DU09),
+         
+         Belief_post = DU12,
+         Belief_post_short = substr(DU12, 1, 15),
+         Belief_post_n = as.numeric(DU12) -1,
+         Belief_strength_post = ifelse(is.na(DU14), as.numeric(DU15), as.numeric(DU14)),
+         Decision_post = as.numeric(DU13),
+         
+         Eval_study_quali = as.numeric(DU16),
+         
+         Belief_diff = Belief_post_n - Belief_pre_n,
+         Belief_strength_diff = Belief_strength_post - Belief_strength_pre,
+         Decision_diff = Decision_post - Decision_pre,
+         
+         Belief_change = ifelse(Belief_post == Belief_pre, "no", "yes"),
+         Belief_change_n = as.numeric(as.factor(Belief_change)) - 1,
+         Prebelief_short = substr(Belief_pre, 1, 20)) |> 
+  filter(!is.na(Gruppe))
+
+data |> 
+  select(Belief_strength_diff, Group)  |> 
+  group_by(Group) |> 
+  skim()
+
+skim(data)
+```
+
+## Ergebnisse
+
+### Soziodemografie
+
+#### Sex
+
+```{r}
+table(data$DA01)
+```
+
+#### Semester
+
+```{r}
+table(data$DA06_01)
+mean(data$DA06_01, na.rm = T)
+sd(data$DA06_01, na.rm = T)
+```
+
+#### Studium
+
+```{r}
+# Studiengang
+table(data$DA07)
+
+# Fächerwahl
+table(data$DA05)
+```
+
+### Evaluation Study Quality
+
+#### Graph
+
+```{r}
+library(tidyverse)
+library(hrbrthemes)
+library(ggforce)
+library(ggmosaic)
+library(brms)
+library(modelsummary)
+library(easystats)
+library(sjPlot)
+
+data |> 
+  mutate(Gruppe = recode_factor(Gruppe, 
+                 `Ü_konsistent`= "überzeugungskonsistenter \nForschungsbericht", 
+                 `Ü_widrig`= "überzeugungsinkonsistenter \nForschungsbericht")) |> 
+  ggplot(aes(Gruppe, Eval_study_quali)) +
+  geom_violin() +
+  geom_sina() +
+  stat_summary(
+    color = "#8cd000",
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 0.4,
+    position = position_dodge(0.17)
+    ) + 
+  facet_wrap(~Belief_pre_short)  +
+  theme_minimal() +
+  labs(y = "Beurteilung der Studienqualität",
+       title = "Beurteilung der Studienqualität",
+       subtitle = "je Experimentalbedingung",
+       caption = "β1 = -1.05 CI95[-1.44, -0.67]; H1: β1 < 0*; d = -.93") 
+
+ggsave("img/study_quality.png", plot = last_plot(),
+       width = 9,
+       height = 7,
+       dpi = 600)
+```
+
+#### Model
+
+```{r}
+mod08 <- brm(Eval_study_quali ~ Group,
+             data = data,
+             family = gaussian(),
+             cores = 4)
+plot(mod08)  
+summary(mod08)
+pp_check(mod08)
+str(posterior_predict(mod08))
+
+hypothesis(mod08, "GroupÜ_widrig < 0")
+
+
+mod09 <- brm(scale(Eval_study_quali) ~ Group,
+             data = data,
+             family = gaussian())
+plot(mod09)  
+summary(mod09)
+
+modelsummary(list(mod08 = mod08,
+                  mod09 = mod09),
+             statistic = "conf.int")
+```
+
+##### Samuels Tidy Bayes Spielwiese
+
+```{r}
+plot_raw <- 
+  ggplot(data, aes(Gruppe, Eval_study_quali)) +
+  geom_jitter(width = .1, size = 1.8) +
+  stat_summary(
+    color = "#8cd000",
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 0.4,
+    position = position_dodge(0.17)
+    ) +
+  theme_minimal()
+  
+plot_raw
+
+library(tidybayes)
+library(ggdist)
+data_draws <- 
+  spread_draws(mod08, b_GroupÜ_widrig, b_Intercept) |>
+  filter(.iteration > 500) |> 
+  mutate(`überzeugungskonsistenter Forschungsbericht` = b_Intercept,
+         `überzeugungsinkonsistenter Forschungsbericht` = b_Intercept + b_GroupÜ_widrig) |> 
+  pivot_longer(cols = c(`überzeugungskonsistenter Forschungsbericht`, `überzeugungsinkonsistenter Forschungsbericht`),
+               names_to = "Gruppe",
+               values_to = "Eval_study_quali") 
+
+## Version 1
+#ggplot(data, aes(x = Gruppe, y = Eval_study_quali)) +
+#  stat_interval(data = data_draws) +
+#  scale_color_manual(values = c("#8cd00070", "#8cd00085", "#8cd000")) +
+#  geom_jitter(width = .1) +
+#  stat_summary(
+#    color = "#8cd000",
+#    fun.data="mean_sdl",  fun.args = list(mult=1), 
+#    geom = "pointrange",  size = .6,
+#    ) +
+#  stat_summary(
+#    color = "#ffffff",
+#    fun.data = "mean_sdl",
+#    geom = "point",  size = 2,
+#    ) +
+#  theme_minimal()
+
+## Version 2
+#ggplot(data, aes(x = Gruppe, y = Eval_study_quali)) +
+#  stat_slab(data = data_draws,
+#            aes(fill = after_stat(level)),
+#            .width = c(.66, .95, 1),
+#            width = .2) +
+#  scale_fill_manual(values = c("#8cd00030", "#8cd00095", "#8cd000")) +
+#  geom_jitter(width = .1) +
+#  stat_summary(
+#    color = "#8cd000",
+#    fun.data="mean_sdl",  fun.args = list(mult=1), 
+#    geom = "pointrange",  size = .6,
+#    ) +
+#  stat_summary(
+#    color = "#ffffff",
+#    fun.data = "mean_sdl",
+#    geom = "point",  size = 2,
+#    ) +
+#  theme_minimal()
+
+## Version 2a
+ggplot(data|> 
+  mutate(Gruppe = recode_factor(Gruppe, 
+                 `Ü_konsistent`= "überzeugungskonsistenter Forschungsbericht", 
+                 `Ü_widrig`= "überzeugungsinkonsistenter Forschungsbericht")), 
+  aes(x = Gruppe, y = Eval_study_quali)) +
+  stat_slab(data = data_draws,
+            aes(fill = after_stat(level)),
+            .width = c(.66, .95, 1),
+            width = .2,
+            justification = -.8) +
+  scale_fill_manual(values = c("#8cd00030", "#8cd00095", "#8cd000")) +
+  geom_jitter(width = .1, height = .2, size = 3.0)+
+  stat_summary(
+    color = "#8cd000",
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 1.0
+    ) +
+  theme_minimal() +
+  labs(y = "Beurteilung der Studienqualität",
+       title = "Beurteilung der Studienqualität",
+       subtitle = "je Experimentalbedingung" #,
+       # caption = "β1 = -1.05 CI95[-1.44, -0.67]; H1: β1 < 0*; d = -.93"
+       ) +
+  theme(text = element_text(size = 20))
+
+ggsave("img/study_quality.png", plot = last_plot(),
+       width = 14,
+       height = 9,
+       dpi = 600)
+```
+
+### Beliefupdating
+
+#### Graph
+
+```{r}
+#| message: false
+#| warning: false
+
+data |> 
+  ggplot(aes(Group, Belief_diff)) + 
+  geom_jitter(height = 0) + 
+  facet_wrap(~Prebelief_short)
+
+data |> 
+  filter(!is.na(Belief_pre_short) & !is.na(Belief_post_short)) |>
+  mutate(Group = recode_factor(Group, 
+                 `Ü_konsistent`= "überzeugungskonsistenter \nForschungsbericht", 
+                 `Ü_widrig`= "überzeugungsinkonsistenter \nForschungsbericht"),
+         Belief_diff = as_factor(abs(Belief_diff) + 1)) |> 
+  select(Belief_post_short, Belief_pre_short, Belief_diff, Group) |>
+  ggplot() + 
+  geom_mosaic(aes(x = product(Belief_post_short, Belief_pre_short),
+                  fill = Belief_diff
+                  )) + 
+  stat_mosaic_text(aes(x = product(Belief_post_short, Belief_pre_short), 
+                       label = after_stat(.wt)), size = 4) +
+  scale_fill_manual(values = c("1" = "#8cd000",
+                               "2" = "#006400"),
+                    labels = c("Beibehalten der Überzeugung", "Änderung der Überzeugung")) +
+  facet_wrap(~Group) +
+  labs(x = "Prä-Überzeugung",
+       y = "Post-Überzeugung",
+       title = "Änderung der Überzeugung",
+       ) +
+  scale_y_productlist(breaks=c(0.25, 0.75), labels=c("1", "2")) +
+  scale_x_productlist(breaks=c(.1, .6), labels = c("1", "2")) +
+  guides(fill = guide_legend(nrow = 1)) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(margin = margin(t = -5)),
+    axis.text.y = element_text(margin = margin(r = -5, l = 5)),
+    panel.spacing.y = unit(-30, "lines")
+    )
+
+
+
+
+ggsave("img/belief_updating.png", plot = last_plot(),
+       width = 12/2,
+       height = 9/2,
+       dpi = 500)
+```
+
+#### Model
+
+```{r}
+
+mod01 <- brm(Belief_post_n ~ Belief_pre_n,
+             family = bernoulli(),
+             data = data)
+
+plot(mod01)
+summary(mod01)
+report_01 <- report(mod01)
+report_01[[1]]
+
+
+
+mod02 <- brm(abs(Belief_diff) ~ Group,
+             family = bernoulli(),
+             data = data)
+
+summary(mod02)
+sjPlot::tab_model(mod02)
+
+# plot parameter estimates and their uncertainty
+plot_model(mod02, type="est")
+
+# plot conditional effects and their uncertainty
+#plot_model(mod02, type="emm", terms = "species")
+
+
+plot(mod02)
+pp_check(mod02)
+conditional_effects(mod02)
+
+modelsummary(list(mod01 = mod01, mod02 = mod02), 
+             statistic = 'conf.int',
+             exponentiate = c(TRUE, TRUE))
+
+
+hypothesis(mod02, "exp(Intercept) - exp(Intercept + GroupÜ_widrig) > 0")
+report <- report(mod02)
+report[[1]]
+
+
+```
+
+### Beliefstrength Updating
+
+#### Graph
+
+```{r}
+library(Hmisc)
+data |> 
+  ggplot(aes(Group, Belief_strength_diff)) + 
+  stat_summary(fun.data=mean_sdl, fun.args = list(mult=1), 
+                 geom="pointrange", color="#8cd000") +
+  geom_jitter(height = 0)
+
+
+data |>  
+  gather("Time", "Belief_strength", Belief_strength_pre, Belief_strength_post) |> 
+  mutate(Time = factor(substr(Time, 17, 100), levels = c("pre", "post")),
+         Group = recode_factor(Group, 
+                 `Ü_konsistent` = "überzeugungskonsistenter \nForschungsbericht", 
+                 `Ü_widrig` = "überzeugungsinkonsistenter \nForschungsbericht"),
+         Time = recode_factor(Time,
+                              `pre` = "prä")) |> 
+  rename(`Prä-Überzeugung` = Prebelief_short) |>
+  ggplot(aes(Time, Belief_strength)) + 
+  stat_summary(
+    aes(color = `Prä-Überzeugung`),
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 0.4,
+    position = position_dodge(0.17)
+    ) +
+  scale_color_manual(values = c("#8cd000", "#006400")) +
+  #geom_jitter(aes(color = `Belief_strength`)) + 
+  facet_wrap(~Group) +
+  theme(legend.position = "bottom") +
+  guides(colour = guide_legend(nrow = 4)) +
+  labs(x = "Zeit",
+       y = "Überzeugungsstärke",
+       title = "Änderung der Überzeugungsstärke",
+       subtitle = "je Experimentalbedingung",
+       caption = "β1 = -0.55 CI95[-0.83, -0.27]; H1: β1 < 0*; µdiff&inkonsistent < 0*; d = -.70") +
+  theme_minimal()
+
+#ggsave("img/beliefstrength_updating.png", plot = last_plot(),
+#       width = 8,
+#       height = 6,
+#       dpi = 500)
+```
+
+#### Model
+
+```{r}
+mod03 <- brm(Belief_strength_diff ~ Group,
+             family = gaussian(),
+             data = data)
+plot(mod03)
+summary(mod03)
+
+hypothesis(mod03, c("GroupÜ_widrig < 0", "(Intercept + GroupÜ_widrig) < 0"))
+
+mod03b <- brm(scale(Belief_strength_diff) ~ Group,
+             family = gaussian(),
+             data = data)
+plot(mod03b)
+summary(mod03b)
+
+
+#mod04 <- brm(
+#  Belief_strength ~ Time * Group + (1 | CASE),
+#  data = data |>
+#    gather(
+#      "Time",
+#      "Belief_strength",
+#      Belief_strength_pre,
+#      Belief_strength_post
+#    ) |>
+#    mutate(Time = factor(
+#      substr(Time, 17, 100), levels = c("pre", "post")
+#    )),
+#  family = gaussian()
+#)
+#plot(mod04)  
+#
+#mod05 <- brm(
+#  scale(Belief_strength) ~ Time * Group + (1 | CASE),
+#  data = data |>
+#    gather(
+#      "Time",
+#      "Belief_strength",
+#      Belief_strength_pre,
+#      Belief_strength_post
+#    ) |>
+#    mutate(Time = factor(
+#      substr(Time, 17, 100), levels = c("pre", "post")
+#    )),
+#  family = gaussian()
+#)
+#plot(mod05)  
+#
+#modelsummary(list(mod04 = mod04, 
+#                  mod05 = mod05), 
+#             statistic = 'conf.int')
+#
+
+
+```
+
+```{r}
+
+data_draws_h3 <- 
+  spread_draws(mod03, b_GroupÜ_widrig, b_Intercept) |>
+  filter(.iteration > 500) |> 
+  mutate(`überzeugungskonsistenter Forschungsbericht` = b_Intercept,
+         `überzeugungsinkonsistenter Forschungsbericht` = b_Intercept + b_GroupÜ_widrig) |> 
+  pivot_longer(cols = c(`überzeugungskonsistenter Forschungsbericht`, `überzeugungsinkonsistenter Forschungsbericht`),
+               names_to = "Gruppe",
+               values_to = "Belief_strength_diff") 
+
+
+## Version 2a
+ggplot(data|> 
+  mutate(Gruppe = recode_factor(Gruppe, 
+                 `Ü_konsistent`= "überzeugungskonsistenter Forschungsbericht", 
+                 `Ü_widrig`= "überzeugungsinkonsistenter Forschungsbericht")), 
+  aes(x = Gruppe, y = Belief_strength_diff)) +
+  stat_slab(data = data_draws_h3,
+            aes(fill = after_stat(level)),
+            .width = c(.66, .95, 1),
+            width = .2,
+            justification = -.8) +
+  scale_fill_manual(values = c("#8cd00030", "#8cd00095", "#8cd000")) +
+  geom_jitter(width = .1, height = .2, size = 3.0)+
+  stat_summary(
+    color = "#8cd000",
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 1.0
+    ) +
+  theme_minimal() +
+  labs(y = "Änderung der Überzeugungsstärke",
+       title = "Änderung der Überzeugungsstärke",
+       subtitle = "je Experimentalbedingung") +
+  theme(text = element_text(size = 20))
+
+
+ggsave("img/beliefstrength_updating.png", plot = last_plot(),
+       width = 14,
+       height = 8,
+       dpi = 500)
+
+```
+
+### Handlungstendenz-Updating
+
+#### Graph
+
+```{r}
+data |> 
+  gather("Time", "Decision", Decision_pre, Decision_post) |> 
+  mutate(Time = factor(substr(Time, 10, 100), levels = c("pre", "post")),
+         Group = recode_factor(Group, 
+                 `Ü_konsistent` = "überzeugungskonsistenter \nForschungsbericht", 
+                 `Ü_widrig` = "überzeugungsinkonsistenter \nForschungsbericht"),
+         Time = recode_factor(Time,
+                              `pre` = "prä")) |>  
+  rename(`Prä-Überzeugung` = Prebelief_short) |>
+  ggplot(aes(Time, Decision)) + 
+  stat_summary(
+    aes(color = `Prä-Überzeugung`),
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 0.8,
+    position = position_dodge(0.17)
+    ) +
+  scale_color_manual(values = c("#8cd000", "#006400"),
+                    labels = c("1 = male bias", "2 = kein male bias")) +
+  geom_jitter(aes(color = `Prä-Überzeugung`), size = 2.6) + 
+  facet_wrap(~Group) +
+  theme(legend.position = "bottom") +
+  guides(colour = guide_legend(nrow = 4)) +
+  labs(x = "Zeit",
+       y = "Handlungstendenz",
+       title = "Änderung der Handlungstendenz",
+       subtitle = "je Experimentalbedingung") +
+  theme_minimal()  +
+  ylim("1","2","3","4", "5", "6","7") +
+  theme(text = element_text(size = 20))
+
+ggsave("img/action-tendency_updating.png", plot = last_plot(),
+       width = 13,
+       height = 8,
+       dpi = 500)
+```
+
+#### Model
+
+```{r}
+mod06a <- brm(abs(Decision_diff) ~ Group,
+             family = gaussian(),
+             data = data)
+plot(mod06a)
+summary(mod06a)
+conditional_effects(mod06a)
+
+# Betrag weil Item gerichtet und damit abhängig von gewähltem Prä-Belief 
+# konsistent 1: 
+#Überzeugung = kein Male Bias
+#Evidenz = kein Male Bias -> 0 oder negative Werte
+#
+#konsistent 2: 
+#Überzeugung = Male Bias
+#Evidenz = Male Bias -> 0 oder positive Werte 
+#
+#inkonsistent 1: 
+#Überzeugung = kein Male Bias
+#Evidenz = Male Bias -> 0 oder positive Werte 
+#
+#inkonsistent 2:
+#Überzeugung = Male Bias 
+#Evidenz = kein Male Bias -> 0 oder negative Werte
+
+mod06 <- brm(
+  Decision ~ Time * Group + Prebelief_short + (1 | CASE),
+  data = data |>
+    gather("Time", "Decision", Decision_pre, Decision_post) |>
+    mutate(Time = factor(
+      substr(Time, 10, 100), levels = c("pre", "post")
+    )),
+  family = gaussian()
+) 
+plot(mod06)  
+
+mod07 <- brm(
+  scale(Decision) ~ Time * Group + Prebelief_short + (1 | CASE),
+  data = data |>
+    gather("Time", "Decision", Decision_pre, Decision_post) |>
+    mutate(Time = factor(
+      substr(Time, 10, 100), levels = c("pre", "post")
+    )),
+  family = gaussian()
+) 
+plot(mod07)  
+
+modelsummary(list(mod06 = mod06,
+                  mod06b = mod06b,
+                  mod07 = mod07), 
+             statistic = 'conf.int')
+```
+
+```{r}
+
+data_draws_rq3 <- 
+  spread_draws(mod06b, b_GroupÜ_widrig, b_Intercept) |>
+  filter(.iteration > 500) |> 
+  mutate(`überzeugungskonsistenter Forschungsbericht` = b_Intercept,
+         `überzeugungsinkonsistenter Forschungsbericht` = b_Intercept + b_GroupÜ_widrig) |> 
+  pivot_longer(cols = c(`überzeugungskonsistenter Forschungsbericht`, `überzeugungsinkonsistenter Forschungsbericht`),
+               names_to = "Gruppe",
+               values_to = "Decision_diff") 
+
+
+## Version 2a
+ggplot(data|> 
+  mutate(Gruppe = recode_factor(Gruppe, 
+                 `Ü_konsistent`= "überzeugungskonsistenter Forschungsbericht", 
+                 `Ü_widrig`= "überzeugungsinkonsistenter Forschungsbericht")), 
+  aes(x = Gruppe, y = Decision_diff)) +
+  stat_slab(data = data_draws_rq3,
+            aes(fill = after_stat(level)),
+            .width = c(.66, .95, 1),
+            width = .2,
+            justification = -.8) +
+  scale_fill_manual(values = c("#8cd00030", "#8cd00095", "#8cd000")) +
+  geom_jitter(width = .1, height = .2, size = 3.0)+
+  stat_summary(
+    color = "#8cd000",
+    fun.data="mean_sdl",  fun.args = list(mult=1), 
+    geom = "pointrange",  size = 1.0
+    ) +
+  theme_minimal() +
+  labs(y = "Änderung der Handlungstendenz",
+       title = "Änderung der Handlungstendenz",
+       subtitle = "je Experimentalbedingung")  +
+  theme(text = element_text(size = 20))
+
+
+#ggsave("img/action-tendency_updating.png", plot = last_plot(),
+#       width = 13,
+#       height = 8,
+#       dpi = 500)
+
+```

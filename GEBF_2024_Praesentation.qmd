@@ -1,0 +1,450 @@
+---
+title: '[[Confirmation Bias]{.imp} <br> als Barriere evidenzinformierter Schulpraxis?]{style="font-size: .8em;"}'
+subtitle: "<br> Kirstin Schmidt, Emily Lara Moritz, Samuel Merk"
+author: '[Pädagogische Hochschule Karlsruhe | GEBF 2024 | 18.03.2024]{style="font-size: .6em"}'
+format: 
+  revealjs:
+    auto-stretch: true
+    self-contained: false
+    controls: true
+    slide-number: c/t
+    logo: img/PH_logo.svg
+    theme: [simple, css/custom.scss]
+    fullscreen: true
+    pdf-separate-fragments: true
+    pdfexport: true
+bibliography: references.bib
+csl: apa.csl
+editor_options: 
+  chunk_output_type: console
+lightbox: true
+---
+
+```{r hidden chunk which creates template stuff}
+#| echo: false
+
+## in terminal ########
+# quarto install extension quarto-ext/fontawesome
+# quarto install extension schochastics/academicons
+# test
+
+########################
+library(fontawesome)
+library(tidyverse)
+library(readxl)
+library(ggalt)
+library(hrbrthemes)
+library(reactable)
+
+# Change css to PH green
+if(!dir.exists("css"))
+dir.create("css")
+fileConn<-file("css/custom.scss")
+fileStyle<-file("css/custom.scss")
+writeLines(c("/*-- scss:defaults --*/",
+             "$link-color: #8cd000 !default;",
+             # line-height muss im parent der font-size gesetzt werden,
+             # daher hier und nicht inline im YAML header
+             ".reveal h1 {line-height: .8 !important;} ", 
+             # make citations a bit smaller
+             ".citation {font-size: .8em; color: #8cd000;}",
+             ".imp {color: #8cd000;}",
+             ".imp2 {color: #50B32E;}",
+             ".cent2 h2 {text-align: center;}",
+             ".cent3 h3 {text-align: center;}",
+             ".cent1 h1 {text-align: center;}",
+             ".cent_text {text-align: center;}",
+             ".reveal h2 {color: #8cd000 !important;}"),
+           fileConn)
+close(fileConn)
+close(fileStyle)
+```
+
+## {.smaller .center}
+:::: {.columns}
+
+::: {.column width='50%'}
+### Struktur {{< fa list-ul >}} {.smaller}
+
+* Evidenzinformierte Schulpraxis
+* Confirmation Bias 
+* Experimentelle Studie
+  * Stichprobe
+  * Design und Materialien
+  * Forschungsfragen
+  * Ergebnisse
+* Diskussion
+* Referenzen
+:::
+
+::: {.column width='50%'}
+![](img/confbias_metapher.png){} 
+:::
+
+::::
+
+::: footer
+[{{< ai open-access >}}]{.imp} Folien , [{{< ai open-data >}}]{.imp} Daten und [{{< ai open-materials >}}]{.imp} Code auf [{{< fa brands github >}}]{.imp} github verfügbar unter
+:::
+
+::: notes
+
+- kurz in EISP und Confirmation Bias einführen
+- bevor ich dann die Studie näher vorstelle
+
+:::
+
+
+## Evidenzinformierte Schulpraxis {.smaller}
+
+::: {style="font-size: 0.7em"}
+
+* professionelles Handeln u.a. durch [__wissenschaftliche Evidenz__]{.imp2} informieren 
+<br> &rarr; Steigerung von Schulqualität, Unterrichtsqualität und Schüler\*innenleistung [z.B. @slavin2002; @bromme2014; @bauer2015]
+
+<center>
+![Adaptiertes Rahmenkonzept evidenzinformierter Praxis nach Groß Ophoff et al. (2023)](img/Groß_Ophoff.png){width="700"}
+</center>
+
+:::
+
+
+::: notes
+
+- evidenzinformierte Praxis bedeutet, dass Lehrpersonen ihr professionelles Handeln durch eine breite Vielfalt an Evidenz wie wissenschaftliche Evidenz informieren ...
+- ... um allgemein gesprochen Schul- und Unterrichtsqualität sowie SuSleistung zu steigern
+- hier in diesem Rahmenkonzept sehen sie alle Schritte die Lehrpersonen hierbei durchlaufen müssen, beginnend mit der Zielsetzung bis hin zur Nutzung wissenschaftlicher Evidenz in der Praxis z.B.
+  - instrumentelle Nutzung: tatsächlich konkrete Anwendung im Unterricht,
+  - konzeptuelle: Denken,
+  - symbolisch: eigene Positionen zu stärken (fehlt hier)
+- nicht näher darauf eingehen, aber es zeigt sehr schön, dass evidenzinformiertes Handeln komplex ist
+
+:::
+
+
+## Evidenzinformierte Schulpraxis {.smaller}
+
+::: {style="font-size: 0.7em"}
+* wissenschaftliche Evidenz wird in der Praxis häufig nicht berücksichtigt [z.B. @dagenais2012]
+
+* zahlreiche Barrieren, die evidenzinformiertem Handeln entgegenstehen [z.B. @schaik2018]: 
+  * Barrieren auf der Ebene der individuellen Lehrperson (z.B. kognitive Fähigkeiten/Kompetenzen, motivationale Faktoren, Einstellungen)
+  * Barrieren auf der Ebene des wissenschaftlichen Wissens (z.B. Zugänglichkeit)
+  * Barrieren auf der Ebene der Schulorganisation (z.B. verfügbare Zeit)
+  * Barrieren auf der Ebene der Kommunikation (z.B. Kollaboration zwischen Lehrperson und Wissenschaftler:innen)
+  
+
+:::
+
+
+::: notes
+
+  
+- bisher aber große Kluft zwischen diesen theoretischen Vorstellungen und der tatsächlichen Praxis, da wissenschaftliche Evidenz kaum Eingang in die Praxis findet
+
+- mittlerweile zahlreiche Barrieren erforscht, die sich verschiedenen Ebenen zuordnen lassen
+  - Ebene der individuellen Lehrperson z.B. kognitive Fähigkeiten
+  - Ebene des wissenschaftlichen Wissens z.B. Zugänglichkeit
+  - Ebene der Schulorganisation z.B. Zeit
+  - Ebene der Kommunikation z.B. Kollaboration zwischen Lehrperson und Wissenschaftler:innen
+  
+:::
+
+
+## Evidenzinformierte Schulpraxis {.smaller}
+
+::: {style="font-size: 0.7em"}
+* wissenschaftliche Evidenz wird in der Praxis häufig nicht berücksichtigt [z.B. @dagenais2012]
+
+* zahlreiche Barrieren, die evidenzinformiertem Handeln entgegenstehen  [z.B. @schaik2018]: 
+  * **[Barrieren auf der Ebene der individuellen Lehrperson (z.B. kognitive Fähigkeiten/Kompetenzen, motivationale Faktoren, Einstellungen)]{.imp2}**
+  * Barrieren auf der Ebene des wissenschaftlichen Wissens (z.B. Zugänglichkeit)
+  * Barrieren auf der Ebene der Schulorganisation (z.B. verfügbare Zeit)
+  * Barrieren auf der Ebene der Kommunikation (z.B. Kollaboration zwischen Lehrperson und Wissenschaftler:innen)
+  
+
+:::
+
+
+::: notes
+
+- Fokus in dieser Präsentation: 
+  - Ebene der individuellen Lehrpersonen und hier die kognitiven Fähigkeiten
+  - noch konkreter: eine kognitive Verzerrung, die sehr prominent und bereits in vielen Kontexten stark beforscht ist
+
+:::
+
+## Confirmation Bias {.smaller}
+:::: {.columns}
+
+::: {.column width='55%'}
+<!-- &#x2011; ist der "no linebreak hyphen" - sonst bleibt nur das Minus in der Zeile -->
+* Confirmation Bias = eigene Überzeugungen beeinflussen Informationssuche, &#x2011;interpretation und -erinnerung [z.B. @hart2009; @nickerson1998; @oswald2004; @stroud2017]
+  * Informationen, die **konsistent zu Überzeugungen** sind, werden bevorzugt, stärker bestätigend wahrgenommen und besser erinnert
+  * Informationen, die **inkonsistent zu Überzeugungen** sind, werden gemieden, schneller abgewertet oder hinterfragt, um Fehler in diesen zu finden und schlechter erinnert 
+:::
+
+::: {.column width='45%'}
+![](img/confbias_metapher.png){} 
+:::
+
+::::
+
+
+::: notes
+
+- Confirmation Bias 
+- unsere Überzeugung beeinflussen unsere Informationssuche, aber auch die Interpretation und Erinnerung von Infos 
+- konkret bevorzugen wir Informationen, die zu unseren Überzeugungen passen, nehmen diese stärker bestätigend wahr und erinnern uns auch besser an diese
+- also what you see and appreciate
+- wohingegen: Informationen, die unseren Überzeugungen widersprechen, vermeiden wir, werten wir schneller ab oder hinterfragen sie um Fehler in diesen zu finden und wir erinnern uns auch schlechter an sie 
+
+- im Bildungskontext erst einzelne Studien 
+
+:::
+
+## Confirmation Bias im Bildungskontext {.smaller}
+
+
+Überzeugungen von (angehenden) Lehrpersonen beeinflussen...
+
+*   ... ihre Bewertung wissenschaftlicher Studien [@masnick2009]
+*   ... ihr Vertrauen in bildungswissenschaftliche Aussagen [@schmidt2022]
+*   ... ihre Einschätzung bezüglich der Aussagekraft bildungswissenschaftlicher Erkenntnisse [ »scientific impotence excuse«; @futterleib2022; @thomm2021]
+
+    [{{< fa triangle-exclamation >}}]{.imp2} Ergebnisse konnten nicht konsistent repliziert werden [vgl. Studie 2 bei @futterleib2022]
+    
+    [{{< fa surprise >}}]{.imp2} Lehrpersonen passen ihre Überzeugungen der Evidenz an 
+
+<!-- Quarto hat advancete list features https://quarto.org/docs/authoring/markdown-basics.html#lists -->
+
+::: notes
+
+
+- es gibt m.W. nach 4 Studien, die sich explizit damit beschäftigen wie Vorabüberzeugungen den Umgang mit bildungswissenschaftlichen Informationen beeinflussen
+  - Masnick & Zimmermann zeigen, dass Studierende bei der Bewertung bildungswissenschaftlicher Studien z.B. hinsichtlich ihrer methodischen Angemessenheit einem ConfBias unterliegen
+  - in einer eigenen Studie konnten Kolleg:innen und ich zeigen, dass das Vertrauen von Lehrpersonen in bildungwissenschaftliche Aussagen einem ConfBias unterliegt
+  - Thomm und Kolleg:innen untersuchten zwar nicht ConfBias, sondern scientific impotence excuse. Hier geht es aber auch darum, inwieweit Überzeugungen beeinflussen, dass Aussagekraft von Wissenschaft abgelehnt wird
+  - bedeutet konkret, dass man bei wissenschaftlichen Infos, die der Überzeugung widersprechen, angibt, dass das zugrundeliegende Thema grundsätzlich nicht wissenschaftlich untersucht werden kann
+  - Studienergebnisse sprechen für einen Einfluss des scientific impotence excuse bei Lehrpersonen
+  
+  <!-- prüfen --> 
+  
+  - die Überzeugug wirkt sich auch auf die Quellenauswahl aus, um sich weiter zu informieren -> eher nicht-wissenschaftliche Quellen
+  - ABER überraschender Weise: passen sie ihre Überzeugung dennoch an die Evidenz an
+  
+- Futterleib und Kolleg:innen replizierten diese Studie in zwei weiteren experimentellen Studien, konnten aber nur in einer Studie die Ergebnisse von Thomm hinsichtlich Aussagekraft und Quellenauswahl replizieren
+- die überraschende Überzeugungsanpassung zeigte sich allerdings in beiden Studien
+
+comment:
+- was aber auch an den Materialien in Study 2 liegen könnte weil in Study 2 weniger klare Evidenz; 
+
+- qualitative Analysen aus dem Kontext DBDM, in denen Confirmation Bias nicht im Zentrum der FF stand, zeigen, dass Lehrpersonen nicht nach Daten suchen, die ihrer Meinung widerspricht und wenn die Daten doch mal nicht zu ihren Einschätzungen passen, suchen Sie nach Erklärungen, warum die Daten falsch sein könnten (Van Lommel et al., 2017; Choi et al., 2022; Andersen, 2020)
+:::
+
+## Forschungsfragen {.smaller}
+:::: {style="font-size: .85em;"}
+<br>
+
+**Forschungsfrage 1: Beeinflussen Überzeugungen von Lehramtsstudierenden ihre Einschätzung von Studienergebnissen?**
+
+> *H1*: Lehramtsstudierende schätzen Studienergebnisse, die zu ihren Überzeugungen passen, überzeugender ein, als solche, die ihren Überzeugungen widersprechen.
+
+<br>
+
+**Forschungsfrage 2: Verändern Studienergebnisse die Überzeugung von Lehramtsstudierenden?**
+
+> *H2*: Lehramtsstudierende ändern ihre Überzeugung, wenn die Studienergebnisse dieser widersprechen.
+
+<br>
+
+**Forschungsfrage 3 (explorativ): Verändern Studienergebnisse die Handlungstendenz von Lehramtsstudierenden?**
+ 
+:::
+
+::: notes
+
+- an diesen Forschungsstand knüpft unsere vorliegende Studie an und untersucht, ob Lehramtsstudierende
+1) Studienergebnisse überzeugender einschätzen, wenn sie zu ihren Überzeugungen passen
+2) inwieweit Evidenz - wie bei Thomm und Futterleib gezeigt - die Überzeugung von Studierenden updaten
+3) als Ergänzung zum bisherigen Forschungsstand inwieweit Evidenz die Handlungstendenz updated, ein Indikator der etwas näher an dem tatsächlichen Handeln von Lehramtsstudierenden ist
+
+:::
+
+
+# [Experimentelle Studie {{< fa microscope >}}]{.imp} {.cent1}
+
+
+## Stichprobe
+
+* *N* = 77 Lehramtsstudierende der Pädagogischen Hochschule Karlsruhe
+* 82% weiblich
+* *M<sub>Semester</sub>* = 2,31 (*SD* = 0,9)
+* verschiedene Lehramtsstudiengänge (z.B. 70,13% Studierende des Lehramts für die Primarstufe) 
+* verschiedene Studienfächer (z.B. 36,36% mind. ein Fach im mathematischen, naturwissenschaftlichen oder technischen Bereich)
+
+
+
+::: notes 
+
+- hierzu 77 Lehramtsstudierende an der PH KA
+- rekrutiert über die Vorlesung zu Forschungsmethoden der Bildungswissenschaft im BA Studium
+
+
+comment: hier soziodemographische Infos abgetragen
+
+::: 
+
+
+## Design und Materialien {.smaller}
+
+* Between-Person Design
+* thematischer Fokus: Gendergerechte Sprache in der Schule
+
+<center>
+{{< pdf img/Materialien.pdf width=95% height=650 >}}
+</center>
+
+
+::: notes
+
+- wie sind wir vorgegangen? 
+
+- der Studie lag ein between-person Design zugrunde
+- wir haben einen thematischen Schwerpunkt gewählt: Gendergerechte Sprache in Schule, in der es darum ging, ob die reine Verwendung des generischen Maskulinums zu einem Male Bias führt, also ob man stärke männliche Personen assoziiert
+- zunächst kurz über das Thema informiert
+- dann die Studierenden nach ihrer Handlungstendenz in ihrem zukünftigen Unterricht gefragt
+  - also konkret, ob sie sich bemühen werden, Bezeichnungen zu verwenden, die über das generische Maskulinum hinausgehen
+- anschließend ihre Überzeugung dichotom abgefragt 
+- und sie dann nach der Stärke ihrer Überzeugung gefragt
+- dann zufällig eine Studienvignette, die exakt gleich war, sich lediglich im Ergebnis unterschied
+  - Das Ergebnis war zufällig entweder konsistent oder inkonsisten zur vorher angegebenen Überzeugung z.B. Überzeugung kein Male Bias, Evidenz für Male Bias
+- dann Beurteilung der Studie
+- und erneute Abfrage der Handlungstendenz, Überzeugung und Überzeugungsstärke
+
+
+- kommen wir zu den Ergebnissen
+- zur Einfachheit spreche ich nun immer nur noch von konsistenten, inkonsistenten Berichten, meine aber konsistent/inkonsistent zur Überzeugung
+:::
+
+## Ergebnisse
+
+![](img/study_quality.png){width=90%}
+
+::: notes
+- FF1: ob Conf Bias die Bewertung wissenschaftlicher Studien beeinflusst
+- auf der X Achse die zwei Experimentalgruppen abgetragen,
+- auf der Y Achse die Beurteilung der Studienqualitätsbeurteilung  
+  - höhere Werte = überzeugender
+- die grünen sogenannten slabs bieten Infos über die Inferenzstatistik und zwar die jeweilige Wahrscheinlichkeitsverteilung der Mittelwert, die mithilfe von Bayesianischen Regressionsmodellen geschätzt wurde
+- wir sehen, dass wir Evidenz für unsere erste Hypothese haben: Konsistente Forschungsberichte werden überzeugender eingeschätzt als inkonsistente; großer Effekt
+
+
+
+:::
+
+## Ergebnisse
+
+![](img/belief_updating.png){width=80%}
+
+
+::: notes
+
+- kommen wir zur zweiten FF, ob die wissenschaftliche Evidenz die Überzeugung updated
+- in diesem Mosaic plot sehen Sie auf der x- Achse die Prä-Überzeugung der Studierenden
+- auf der y-Achse die Postüberzeugung, 
+  - wobei bei beiden Variablen 1 = Überzeugun, dass Nutzung des generischen Maskulinums zu male bias führt
+  - und die 2 = Nutzung des generischen Maskulinums nicht zu einem male bias führt
+  - farblich unterschiedlich eingefärbt ist, ob die Überzeugung verändert wurde oder nicht
+- diese Ergebnisse widersprechen unserer Hypothese: Studierende bleiben mehrheitlich bei ihrer Überzeugung - hier in hellgrün eingefärbt - , auch bei inkonsistenten Forschungsberichten; nur die Personen hier links oben und rechts unten verändern ihre Überzeugung 
+- allerdings haben wir für dieses Ergebnis nur eine schwache inferenzstatistische Absicherung
+
+:::
+
+
+
+## Ergebnisse
+
+![](img/beliefstrength_updating.png){width=90%}
+
+::: notes
+
+- nun aber noch die Veränderung der Überzeugungsstärke
+- hier auf der x-Achse wieder die Experimentalgruppen
+- auf der y-Achse die Änderung der Überzeugungsstärke, dargestellt als Differenzvariable
+  - negative Werte: Überzeugungsstärke wird geringer
+  - positive Werte: Überzeugungsstärke nimmt zu
+- Lehramtsstudierende, die mit inkonsistentem Forschungsbericht konfrontiert werden, passen ihre Überzeugungsstärke der Evidenz an d.h. sie sind weniger stark überzeugt 
+- Evidenz für einen substantiellen Effekt
+
+:::
+
+## Ergebnisse
+
+![](img/action-tendency_updating.png){width=90%}
+
+
+::: notes
+- nun noch zur explorativen Frage, ob Evidenz die Handlungstendenz updated
+- x-Achse: Zeit, also Handlungstendenz vor und nach Sichtung der Evidenz
+- y-Achse: Zustimmung zum Item, ob sie sich bemühen werden Formulierungen zu verwenden, die über das generische Maskulinum hinausgehen
+  - höhere Werte = höhere Zustimmung
+- erste Hinweise für eine Änderung der Handlungstendenz in Richtung der Evidenz, auch bei inkonsistenten Forschungsberichten
+- z.B. diejenigen, die der Meinung waren, dass es keinen Male Bias gibt, wenn man nur das generische Maskulinum verwendet, 
+ - dann aber inkonsistente Evidenz erhalten - also Evidenz die auf einen Male Bias hindeutet,
+ - stimmen nach Sichtung der Evidenz etwas stärker der Aussage zu, dass sie sich bemühen werden Begrifflichkeiten zu verwenden, die über das generische Maskulinum hinausgehen
+
+aber nur deskriptiv. Inferenzstatististische Ergebnisse noch inkonlusiv
+
+
+::: 
+
+
+## Diskussion I {.smaller}
+::: {.fragment}
+> [{{< fa check-double >}}]{.imp2} Lehramtsstudierende bewerten wissenschaftliche Evidenz in Abhängigkeit von ihren Überzeugungen
+:::
+
+::: {.fragment}
+> [{{< fa question >}}]{.imp2} inkonsistent zu bisherigen Forschungsergebnissen: Wenn Lehramtsstudierende mit überzeugungsinkonsistenten Studienergebnissen konfrontiert sind, ändern sie nicht die Richtung, aber die Stärke ihrer Überzeugung <br> 
+  - Präsentation eines Studienergebnisses vs. Präsentation mehrerer Studienergebnisse <br>
+  
+<!--  - wie tiefgreifend ist die Änderung? --> 
+:::
+
+::: {.fragment}
+> &rarr; Confirmation Bias mögliche Barriere evidenzinformierter Praxis <br>
+&rarr; ABER erste Hinweise, dass das Adressieren von Überzeugungen und das Gegenüberstellen dieser mit wissenschaftlicher Evidenz, Confirmation Bias bei Lehramtsstudierende reduzieren könnte
+:::
+
+::: notes
+- konsistent zu bisherigen Forschungsergebnissen weisen die befragten Lehramsstudierenden bei der Beurteilung der Studienergebnisse einen Confirmation Bais auf
+- (teilweise) zwar inkonsistent zu bisherigen Forschungsergebnissen, aber dennoch vielversprechend  sind die Ergebnisse zur Überzeugungsänderung: unsere Befragten  passen zwar nicht ihre Überzeugung an die Evidenz an, aber sie sind weniger sicher in ihrer Überzeugung
+  - dies könnte im Vergleich zu den Studien von Eva Thomm und Holger Futterleib und jeweiligen Kolleg:innen, daran liegen dass wir nur einen Forschungsbericht und nicht wie sie mehrere präsentiert haben an
+  
+- Confirmation Bias kann also durchaus eine Barriere evidenzinformierter Praxis sein
+  
+- ein Ansatz um ConfBias zu reduzieren könnte also darin liegen, im Lehramsstudium die Überzeugungen von Studierenden zu adressieren und diese dann der wissenschaftlichen Evidenz gegenüberzustellen; am besten mit mehreren Studien
+
+:::
+
+## Diskussion II {.smaller}
+- Limitationen:
+  - externe Validität (Thema, Stichprobenrekrutierung)
+  - Power (z.B. inkonklusive Ergebnisse bezüglich Forschungsfrage 2 und 3)
+
+&rarr; (erweiterte) Replikationsstudie 
+
+::: notes
+- natürlich ist auch diese Studie nicht ohne Limitationen
+- vor allem die externe Validität ist eingeschränkt
+  - Ergebnisse zählen nur für das untersuchte Thema der gendergerechten Sprache in der Schule
+  - selektive Stichprobe 
+- und auch die Power vor allem mit Blick auf FF 3 noch zu gering
+- eine Replikationsstudie, um andere Themen erweitert und einer größeren Stichprobe, um bei allen FF zu konklusiven Ergebnissen zu kommen, wäre daher sinnvoll
+
+
+::: 
+
+
+## Referenzen

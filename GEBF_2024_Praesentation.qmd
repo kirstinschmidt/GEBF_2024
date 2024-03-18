@@ -84,7 +84,7 @@ close(fileStyle)
 ::::
 
 ::: footer
-[{{< ai open-access >}}]{.imp} Folien , [{{< ai open-data >}}]{.imp} Daten und [{{< ai open-materials >}}]{.imp} Code auf [{{< fa brands github >}}]{.imp} github verfügbar unter
+[{{< ai open-access >}}]{.imp} Folien , [{{< ai open-data >}}]{.imp} Daten und [{{< ai open-materials >}}]{.imp} Code auf [{{< fa brands github >}}]{.imp} github verfügbar unter https://kirstinschmidt.github.io/GEBF_2024/
 :::
 
 ::: notes
@@ -220,26 +220,22 @@ close(fileStyle)
 
 ::: notes
 
+- qualitative Analysen aus dem Kontext DBDM, in denen Confirmation Bias nicht im Zentrum der FF stand, zeigen, dass Lehrpersonen nicht nach Daten suchen, die ihrer Meinung widerspricht und wenn die Daten doch mal nicht zu ihren Einschätzungen passen, suchen Sie nach Erklärungen, warum die Daten falsch sein könnten (Van Lommel et al., 2017; Choi et al., 2022; Andersen, 2020)
 
 - es gibt m.W. nach 4 Studien, die sich explizit damit beschäftigen wie Vorabüberzeugungen den Umgang mit bildungswissenschaftlichen Informationen beeinflussen
   - Masnick & Zimmermann zeigen, dass Studierende bei der Bewertung bildungswissenschaftlicher Studien z.B. hinsichtlich ihrer methodischen Angemessenheit einem ConfBias unterliegen
   - in einer eigenen Studie konnten Kolleg:innen und ich zeigen, dass das Vertrauen von Lehrpersonen in bildungwissenschaftliche Aussagen einem ConfBias unterliegt
-  - Thomm und Kolleg:innen untersuchten zwar nicht ConfBias, sondern scientific impotence excuse. Hier geht es aber auch darum, inwieweit Überzeugungen beeinflussen, dass Aussagekraft von Wissenschaft abgelehnt wird
-  - bedeutet konkret, dass man bei wissenschaftlichen Infos, die der Überzeugung widersprechen, angibt, dass das zugrundeliegende Thema grundsätzlich nicht wissenschaftlich untersucht werden kann
-  - Studienergebnisse sprechen für einen Einfluss des scientific impotence excuse bei Lehrpersonen
-  
-  <!-- prüfen --> 
-  
+  - Thomm und Kolleg:innen, inwieweit Überzeugungen beeinflussen, ob die Aussagekraft von Wissenschaft abgelehnt wird
+    - konkret verfolgt dies die Annahme man bei wissenschaftlichen Infos, die der Überzeugung widersprechen, angibt, dass das zugrundeliegende Thema grundsätzlich nicht wissenschaftlich untersucht werden kann
+  - das wurde nicht als ConfBias bezeichnet, sondern scientific impotence excuse, aber es geht dennoch um Überzeugungen
+  - In der Studie zeigt sich, dass die Überzeugung von Lehramtsstudierende die Einschätzung bezüglich der Aussagekraft von Wissenschaft beeinflusst
   - die Überzeugug wirkt sich auch auf die Quellenauswahl aus, um sich weiter zu informieren -> eher nicht-wissenschaftliche Quellen
   - ABER überraschender Weise: passen sie ihre Überzeugung dennoch an die Evidenz an
-  
-- Futterleib und Kolleg:innen replizierten diese Studie in zwei weiteren experimentellen Studien, konnten aber nur in einer Studie die Ergebnisse von Thomm hinsichtlich Aussagekraft und Quellenauswahl replizieren
-- die überraschende Überzeugungsanpassung zeigte sich allerdings in beiden Studien
 
 comment:
 - was aber auch an den Materialien in Study 2 liegen könnte weil in Study 2 weniger klare Evidenz; 
 
-- qualitative Analysen aus dem Kontext DBDM, in denen Confirmation Bias nicht im Zentrum der FF stand, zeigen, dass Lehrpersonen nicht nach Daten suchen, die ihrer Meinung widerspricht und wenn die Daten doch mal nicht zu ihren Einschätzungen passen, suchen Sie nach Erklärungen, warum die Daten falsch sein könnten (Van Lommel et al., 2017; Choi et al., 2022; Andersen, 2020)
+
 :::
 
 ## Forschungsfragen {.smaller}
@@ -267,7 +263,7 @@ comment:
 - an diesen Forschungsstand knüpft unsere vorliegende Studie an und untersucht, ob Lehramtsstudierende
 1) Studienergebnisse überzeugender einschätzen, wenn sie zu ihren Überzeugungen passen
 2) inwieweit Evidenz - wie bei Thomm und Futterleib gezeigt - die Überzeugung von Studierenden updaten
-3) als Ergänzung zum bisherigen Forschungsstand inwieweit Evidenz die Handlungstendenz updated, ein Indikator der etwas näher an dem tatsächlichen Handeln von Lehramtsstudierenden ist
+3) inwieweit Evidenz die Handlungstendenz updated, ein Indikator der etwas näher an dem tatsächlichen Handeln von Lehramtsstudierenden ist und Ergänzung zum bisherigen Forschungsstan
 
 :::
 
@@ -323,7 +319,7 @@ comment: hier soziodemographische Infos abgetragen
 - und erneute Abfrage der Handlungstendenz, Überzeugung und Überzeugungsstärke
 
 
-- kommen wir zu den Ergebnissen
+- kommen wir zu den Ergebnissen - bayesianische Regressionsanalysen
 - zur Einfachheit spreche ich nun immer nur noch von konsistenten, inkonsistenten Berichten, meine aber konsistent/inkonsistent zur Überzeugung
 :::
 
@@ -445,6 +441,8 @@ aber nur deskriptiv. Inferenzstatististische Ergebnisse noch inkonlusiv
 
 
 ::: 
+
+## Vielen Dank für Ihre Aufmerksamkeit!
 
 
 ## Referenzen
